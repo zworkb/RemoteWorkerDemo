@@ -12,7 +12,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 
 public class RemoteSampleWorker extends RemoteListenableWorker implements Runnable {
-    Thread pythonThread = null;
+    Thread workerThread = null;
     CallbackToFutureAdapter.Completer workCompleter = null;
 
     public RemoteSampleWorker(Context context, WorkerParameters params) {
@@ -24,10 +24,10 @@ public class RemoteSampleWorker extends RemoteListenableWorker implements Runnab
     public ListenableFuture<Result> startRemoteWork() {
         return CallbackToFutureAdapter.getFuture(completer -> {
             workCompleter = completer;
-            pythonThread = new Thread(this);
-            pythonThread.start();
+            workerThread = new Thread(this);
+            workerThread.start();
             Log.d("RemoteSampleWorker", "thread started");
-            pythonThread.join();
+            workerThread.join();
             Log.d("RemoteSampleWorker", "thread finished");
             return "RemoteSampleWorker started";
         });
